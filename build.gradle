@@ -1,0 +1,46 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.0'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'co.inspien'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+	// 시나리오1: 주문 XML 및 제공된 SAMPLE_DATA(XML) 파싱/매핑용
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+
+	// 시나리오1: 영수증 파일 FTP 전송용 (Spring BOM 미관리 → 버전 명시)
+	implementation 'commons-net:commons-net:3.11.1'
+
+	// DB 드라이버: 접속정보 복호화 후 실제 DBMS 확인되면 추가 예정
+	// 예) runtimeOnly 'com.mysql:mysql-connector-j'  또는  Oracle/PostgreSQL 등
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-jdbc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
