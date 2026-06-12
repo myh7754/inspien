@@ -36,6 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 
+### 개인 작업 노트(제출 제외) ###
+docs/SCHEDULE.md
+### 과제 원본 바이너리(제출 제외, 용량) ###
+docs/*.pptx
+
 ### 과제 보안: 복호화된 접속정보/비밀값 커밋 방지 ###
 # 전화번호(복호화 키), APPLICANT_KEY, DB/FTP 접속정보 등은 절대 커밋 금지
 application-secret.properties
