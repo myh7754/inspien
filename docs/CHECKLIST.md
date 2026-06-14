@@ -26,7 +26,7 @@
 - [x] `[—]` ORDER_TB / SHIPMENT_TB 생성(DDL 실행), 연결 확인
 
 ## Phase 3. 시나리오 1 — 실시간 주문 (REST) → Phase 2
-- [ ] `[TDD]` XML 1:N → flat 파서 (`OrderXmlParser`) `FR-S1-02`
+- [x] `[TDD]` XML 1:N → flat 파서 (`OrderXmlParser`) `FR-S1-02`
 - [ ] `[TDD]` 입력 검증 (`OrderValidator`) `FR-S1-01-a`
 - [ ] `[TDD]` 채번기 (`IdGenerator`, 대문자1+숫자3, 동시성) `NFR-ID-01/02`
 - [ ] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a`
