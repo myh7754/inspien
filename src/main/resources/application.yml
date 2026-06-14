@@ -3,3 +3,7 @@ spring:
     name: inspien-assignment
   config:
     import: "optional:classpath:application-secret.yml"
+  sql:
+    init:
+      mode: always           # 앱 시작 시 schema.sql 실행
+      continue-on-error: true  # 테이블 이미 존재해도 계속 진행
