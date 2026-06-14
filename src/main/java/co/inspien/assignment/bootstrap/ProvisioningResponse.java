@@ -1,39 +1,26 @@
 package co.inspien.assignment.bootstrap;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-/**
- * Inspien 제공 API 응답 JSON DTO.
- * ORDER_TB_CONN / SHIPMENT_TB_CONN / FTP_CONN 은 필드별로 개별 암호화된 객체로 온다.
- */
-@Getter
-@NoArgsConstructor
-public class ProvisioningResponse {
+public record ProvisioningResponse(
+        @JsonProperty("APPLICANT_KEY")    String applicantKey,
+        @JsonProperty("ORDER_TB_CONN")    ConnInfo orderTbConn,
+        @JsonProperty("SHIPMENT_TB_CONN") ConnInfo shipmentTbConn,
+        @JsonProperty("FTP_CONN")         FtpConnInfo ftpConn,
+        @JsonProperty("SAMPLE_DATA")      String sampleData
+) {
+    public record ConnInfo(
+            @JsonProperty("URL")      String url,
+            @JsonProperty("ID")       String id,
+            @JsonProperty("PASSWORD") String password,
+            @JsonProperty("TABLE")    String table
+    ) {}
 
-    @JsonProperty("APPLICANT_KEY")  private String applicantKey;
-    @JsonProperty("ORDER_TB_CONN")  private ConnInfo orderTbConn;
-    @JsonProperty("SHIPMENT_TB_CONN") private ConnInfo shipmentTbConn;
-    @JsonProperty("FTP_CONN")       private FtpConnInfo ftpConn;
-    @JsonProperty("SAMPLE_DATA")    private String sampleData;
-
-    @Getter
-    @NoArgsConstructor
-    public static class ConnInfo {
-        @JsonProperty("URL")      private String url;
-        @JsonProperty("ID")       private String id;
-        @JsonProperty("PASSWORD") private String password;
-        @JsonProperty("TABLE")    private String table;
-    }
-
-    @Getter
-    @NoArgsConstructor
-    public static class FtpConnInfo {
-        @JsonProperty("URL")      private String url;
-        @JsonProperty("PORT")     private String port;
-        @JsonProperty("ID")       private String id;
-        @JsonProperty("PASSWORD") private String password;
-        @JsonProperty("PATH")     private String path;
-    }
+    public record FtpConnInfo(
+            @JsonProperty("URL")      String url,
+            @JsonProperty("PORT")     String port,
+            @JsonProperty("ID")       String id,
+            @JsonProperty("PASSWORD") String password,
+            @JsonProperty("PATH")     String path
+    ) {}
 }

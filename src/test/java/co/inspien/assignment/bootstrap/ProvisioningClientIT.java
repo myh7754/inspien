@@ -3,6 +3,8 @@ package co.inspien.assignment.bootstrap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("제공 API 호출 및 복호화 통합")
 class ProvisioningClientIT {
 
+    private static final Logger log = LoggerFactory.getLogger(ProvisioningClientIT.class);
+
     @Autowired ProvisioningClient provisioningClient;
     @Autowired ProvisioningProperties props;
 
@@ -26,14 +30,14 @@ class ProvisioningClientIT {
     void fetches_all_fields_from_provisioning_api() {
         ProvisioningResponse response = provisioningClient.fetch();
 
-        assertThat(response.getApplicantKey()).isNotBlank();
-        assertThat(response.getOrderTbConn()).isNotNull();
-        assertThat(response.getOrderTbConn().getUrl()).isNotBlank();
-        assertThat(response.getShipmentTbConn()).isNotNull();
-        assertThat(response.getFtpConn()).isNotNull();
-        assertThat(response.getSampleData()).isNotBlank();
+        assertThat(response.applicantKey()).isNotBlank();
+        assertThat(response.orderTbConn()).isNotNull();
+        assertThat(response.orderTbConn().url()).isNotBlank();
+        assertThat(response.shipmentTbConn()).isNotNull();
+        assertThat(response.ftpConn()).isNotNull();
+        assertThat(response.sampleData()).isNotBlank();
 
-        System.out.println("✅ APPLICANT_KEY : " + response.getApplicantKey());
+        log.info("APPLICANT_KEY : {}", response.applicantKey());
     }
 
     @Test
@@ -41,27 +45,27 @@ class ProvisioningClientIT {
     void decrypts_connection_info_with_phone_number_key() {
         ProvisioningResponse response = provisioningClient.fetch();
         ConnectionInfoDecryptor decryptor =
-                new ConnectionInfoDecryptor(props.getApplicant().getPhoneNumber());
+                new ConnectionInfoDecryptor(props.applicant().phoneNumber());
 
-        ProvisioningResponse.ConnInfo order    = response.getOrderTbConn();
-        ProvisioningResponse.ConnInfo shipment = response.getShipmentTbConn();
-        ProvisioningResponse.FtpConnInfo ftp   = response.getFtpConn();
+        ProvisioningResponse.ConnInfo order    = response.orderTbConn();
+        ProvisioningResponse.ConnInfo shipment = response.shipmentTbConn();
+        ProvisioningResponse.FtpConnInfo ftp   = response.ftpConn();
 
-        String orderUrl    = decryptor.decrypt(order.getUrl());
-        String orderTable  = decryptor.decrypt(order.getTable());
-        String ftpUrl      = decryptor.decrypt(ftp.getUrl());
-        String ftpPort     = decryptor.decrypt(ftp.getPort());
+        String orderUrl    = decryptor.decrypt(order.url());
+        String orderTable  = decryptor.decrypt(order.table());
+        String ftpUrl      = decryptor.decrypt(ftp.url());
+        String ftpPort     = decryptor.decrypt(ftp.port());
 
         assertThat(orderUrl).isNotBlank();
         assertThat(ftpUrl).isNotBlank();
 
-        System.out.println("✅ ORDER DB URL   : " + orderUrl);
-        System.out.println("✅ ORDER TABLE    : " + orderTable);
-        System.out.println("✅ FTP URL        : " + ftpUrl);
-        System.out.println("✅ FTP PORT       : " + ftpPort);
-        System.out.println("✅ ORDER DB ID    : " + decryptor.decrypt(order.getId()));
-        System.out.println("✅ ORDER PASSWORD : " + decryptor.decrypt(order.getPassword()));
-        System.out.println("✅ SHIPMENT TABLE : " + decryptor.decrypt(shipment.getTable()));
+        log.info("ORDER DB URL   : {}", orderUrl);
+        log.info("ORDER TABLE    : {}", orderTable);
+        log.info("FTP URL        : {}", ftpUrl);
+        log.info("FTP PORT       : {}", ftpPort);
+        log.info("ORDER DB ID    : {}", decryptor.decrypt(order.id()));
+        log.info("ORDER PASSWORD : {}", decryptor.decrypt(order.password()));
+        log.info("SHIPMENT TABLE : {}", decryptor.decrypt(shipment.table()));
     }
 
     @Test
@@ -70,10 +74,10 @@ class ProvisioningClientIT {
         ProvisioningResponse response = provisioningClient.fetch();
         SampleDataDecoder decoder = new SampleDataDecoder();
 
-        String xml = decoder.decode(response.getSampleData());
+        String xml = decoder.decode(response.sampleData());
 
         assertThat(xml).contains("<HEADER>");
         assertThat(xml).contains("<ITEM>");
-        System.out.println("✅ SAMPLE_DATA XML :\n" + xml);
+        log.info("SAMPLE_DATA XML :\n{}", xml);
     }
 }
