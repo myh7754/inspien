@@ -22,7 +22,7 @@
 - [x] `[TDD]` SAMPLE_DATA 디코더 (base64 → EUC-KR XML) `FR-BOOT-03`
 - [x] `[—]` 개인정보/참여자명 외부설정 분리 (`application-secret`) `C-01`
 - [x] `[IT]` 제공 API 호출 (`ProvisioningClient`, Basic Auth) `FR-BOOT-01`
-- [ ] `[—]` 복호화 → DBMS 확정 → JDBC 드라이버 추가, exclude 제거 `C-02`
+- [x] `[—]` 복호화 → DBMS 확정 → JDBC 드라이버 추가, exclude 제거 `C-02`
 - [ ] `[—]` ORDER_TB / SHIPMENT_TB 생성(DDL 실행), 연결 확인
 
 ## Phase 3. 시나리오 1 — 실시간 주문 (REST) → Phase 2

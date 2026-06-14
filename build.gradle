@@ -28,8 +28,8 @@ dependencies {
 	// 시나리오1: 영수증 파일 FTP 전송용 (Spring BOM 미관리 → 버전 명시)
 	implementation 'commons-net:commons-net:3.11.1'
 
-	// DB 드라이버: 접속정보 복호화 후 실제 DBMS 확인되면 추가 예정
-	// 예) runtimeOnly 'com.mysql:mysql-connector-j'  또는  Oracle/PostgreSQL 등
+	// Oracle JDBC 드라이버 (복호화 결과 DBMS = Oracle 확정)
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
