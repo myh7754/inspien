@@ -19,7 +19,7 @@
 
 ## Phase 2. Bootstrap — 접속정보 확보 ⚠️ 모든 작업의 출발점
 - [x] `[TDD]` AES-128 복호화기 (`ConnectionInfoDecryptor`) — 키=전화번호 SHA-1 앞16B `FR-BOOT-02`
-- [ ] `[TDD]` SAMPLE_DATA 디코더 (base64 → EUC-KR XML) `FR-BOOT-03`
+- [x] `[TDD]` SAMPLE_DATA 디코더 (base64 → EUC-KR XML) `FR-BOOT-03`
 - [x] `[—]` 개인정보/참여자명 외부설정 분리 (`application-secret`) `C-01`
 - [ ] `[IT]` 제공 API 호출 (`ProvisioningClient`, Basic Auth) `FR-BOOT-01`
 - [ ] `[—]` 복호화 → DBMS 확정 → JDBC 드라이버 추가, exclude 제거 `C-02`
