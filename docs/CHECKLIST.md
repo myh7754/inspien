@@ -27,9 +27,9 @@
 
 ## Phase 3. 시나리오 1 — 실시간 주문 (REST) → Phase 2
 - [x] `[TDD]` XML 1:N → flat 파서 (`OrderXmlParser`) `FR-S1-02`
-- [ ] `[TDD]` 입력 검증 (`OrderValidator`) `FR-S1-01-a`
-- [ ] `[TDD]` 채번기 (`IdGenerator`, 대문자1+숫자3, 동시성) `NFR-ID-01/02`
-- [ ] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a`
+- [x] `[TDD]` 입력 검증 (`OrderValidator`) `FR-S1-01-a`
+- [x] `[TDD]` 채번기 (`IdGenerator`, 대문자1+숫자3, 동시성) `NFR-ID-01/02`
+- [x] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a` — DELETE 권한 부재 확인, 보상은 트랜잭션 롤백으로 전환
 - [ ] `[IT]` 영수증 파일 생성 + FTP 전송 (`ReceiptFtpSender`) `FR-S1-06/07/08`
 - [ ] `[TDD]` 오케스트레이션 + 트랜잭션 경계(전략 B) (`OrderService`) `FR-S1-09, NFR-TX-01`
 - [ ] `[—]` REST 수신 + 응답 JSON (`OrderController`) `FR-S1-09-a`
@@ -42,9 +42,9 @@
 - [ ] `[IT]` 배치 멱등성 (재실행 중복적재 없음) `NFR-ID-03`
 
 ## Phase 5. 견고성 — 보상 / 운영 (NFR) → Phase 3,4
-- [ ] `[TDD]` 보상 트랜잭션 (commit 실패 시 FTP 삭제) `NFR-TX-02/03`
-- [ ] `[—]` 모니터링 로그 (요청단위 로컬파일) `NFR-LOG-01/02`
-- [ ] `[—]` 예외 계층 + 단계별 처리 (JDBC/FTP 구분) `NFR-EXC-01/02/03`
+- [ ] `[TDD]` 보상 트랜잭션 (DB 롤백 + commit 실패 시 FTP 삭제) `NFR-TX-01/02/03`
+- [x] `[—]` 모니터링 로그 (요청단위 로컬파일, MonitoringFilter+logback) `NFR-LOG-01/02`
+- [~] `[—]` 예외 계층 + 전역 처리 기반 구축 (ErrorCode/InspienException/GlobalExceptionHandler) `NFR-EXC` — 단계별(JDBC/FTP) 분기는 서비스 배선 시 완성
 - [ ] `[IT]` 강제 실패 시나리오 (FTP 차단 등) 검증 `AC-06`
 
 ## Phase 6. 마무리 / 제출 → 전체
