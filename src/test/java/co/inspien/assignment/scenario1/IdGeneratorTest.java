@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -21,8 +20,7 @@ class IdGeneratorTest {
     @RepeatedTest(20)
     @DisplayName("생성 ID는 '대문자 1자 + 숫자 3자리' 형식이다")
     void generated_id_matches_format() {
-        String id = generator.generate();
-        assertThat(id).matches("[A-Z]\\d{3}");
+        assertThat(generator.generate()).matches("[A-Z]\\d{3}");
     }
 
     @Test
