@@ -1,1 +1,5 @@
-spring.application.name=inspien-assignment
+spring:
+  application:
+    name: inspien-assignment
+  config:
+    import: "optional:classpath:application-secret.yml"
