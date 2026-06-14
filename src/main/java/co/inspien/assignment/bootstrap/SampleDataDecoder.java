@@ -6,7 +6,7 @@ import java.util.Base64;
 /**
  * 제공 API 응답의 SAMPLE_DATA 필드 디코더.
  * SAMPLE_DATA = EUC-KR로 인코딩된 주문 XML을 Base64로 감싼 문자열.
- * Base64 디코딩 → EUC-KR 바이트 → UTF-8 문자열로 변환한다.
+ * Base64 디코딩 → EUC-KR 바이트 → Java String(유니코드 문자)으로 변환한다.
  */
 public class SampleDataDecoder {
 

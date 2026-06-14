@@ -22,10 +22,10 @@ public class ProvisioningClient {
         this.props = props;
         this.objectMapper = new ObjectMapper();
         this.restClient = RestClient.builder()
-                .baseUrl(props.getUrl())
+                .baseUrl(props.url())
                 .defaultHeaders(h -> h.setBasicAuth(
-                        props.getAuth().getUsername(),
-                        props.getAuth().getPassword()))
+                        props.auth().username(),
+                        props.auth().password()))
                 .build();
     }
 
@@ -34,12 +34,12 @@ public class ProvisioningClient {
      * 응답 Content-Type이 없거나 text/plain으로 오므로 String으로 받아 직접 파싱.
      */
     public ProvisioningResponse fetch() {
-        ProvisioningProperties.Applicant applicant = props.getApplicant();
+        ProvisioningProperties.Applicant applicant = props.applicant();
 
         Map<String, String> body = Map.of(
-                "NAME",         applicant.getName(),
-                "PHONE_NUMBER", applicant.getPhoneNumber(),
-                "E_MAIL",       applicant.getEmail()
+                "NAME",         applicant.name(),
+                "PHONE_NUMBER", applicant.phoneNumber(),
+                "E_MAIL",       applicant.email()
         );
 
         String raw = restClient.post()
