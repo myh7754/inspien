@@ -24,14 +24,15 @@
 - [x] `[IT]` 제공 API 호출 (`ProvisioningClient`, Basic Auth) `FR-BOOT-01`
 - [x] `[—]` 복호화 → DBMS 확정 → JDBC 드라이버 추가, exclude 제거 `C-02`
 - [x] `[—]` ORDER_TB / SHIPMENT_TB 생성(DDL 실행), 연결 확인
-- [ ] `[IT]` **부팅 시 접속정보 동적 로딩** (`ApplicationRunner` 등에서 fetch→복호화→`DataSource`/`FtpProperties` 구성) `FR-BOOT-02` — B안 채택. 복호화기를 실전 경로에 배선(현재는 secret.yml 정적값). 배선은 시나리오1 `OrderService`(⑥) 이후 → Phase 3 의존
+- [ ] `[IT]` **부팅 시 FTP 접속정보 동적 로딩** (`@Bean`으로 fetch→복호화→`FtpProperties` 생성) `FR-BOOT-02` — B안(FTP 한정) 채택. 복호화기를 실전 경로에 배선해 FR-BOOT-02 충족. DB(DataSource)는 스프링 자동설정 영역이라 정적 유지. 배선은 시나리오1 `OrderService`(⑥) 이후 → Phase 3 의존
 
 ## Phase 3. 시나리오 1 — 실시간 주문 (REST) → Phase 2
 - [x] `[TDD]` XML 1:N → flat 파서 (`OrderXmlParser`) `FR-S1-02`
 - [x] `[TDD]` 입력 검증 (`OrderValidator`) `FR-S1-01-a`
 - [x] `[TDD]` 채번기 (`IdGenerator`, 대문자1+숫자3, 동시성) `NFR-ID-01/02`
 - [x] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a` — DELETE 권한 부재 확인, 보상은 트랜잭션 롤백으로 전환
-- [ ] `[IT]` 영수증 파일 생성 + FTP 전송 (`ReceiptFtpSender`) `FR-S1-06/07/08`
+- [x] `[TDD]` 영수증 파일 생성 (`ReceiptFileBuilder`, ^구분·EUC-KR·파일명) `FR-S1-07/08`
+- [x] `[IT]` FTP 전송 (`ReceiptFtpSender`, commons-net) `FR-S1-06` — FTP 계정은 업로드 전용(RETR/DELE 550 거부) 확인, 보상은 삭제 불가 → 순서+롤백으로 전환
 - [ ] `[TDD]` 오케스트레이션 + 트랜잭션 경계(전략 B) (`OrderService`) `FR-S1-09, NFR-TX-01`
 - [ ] `[—]` REST 수신 + 응답 JSON (`OrderController`) `FR-S1-09-a`
 - [ ] `[IT]` happy path 통합 (XML POST → DB+FTP → SUCCESS)
@@ -43,7 +44,7 @@
 - [ ] `[IT]` 배치 멱등성 (재실행 중복적재 없음) `NFR-ID-03`
 
 ## Phase 5. 견고성 — 보상 / 운영 (NFR) → Phase 3,4
-- [ ] `[TDD]` 보상 트랜잭션 (DB 롤백 + commit 실패 시 FTP 삭제) `NFR-TX-01/02/03`
+- [ ] `[TDD]` 보상 트랜잭션 `NFR-TX-01/02/03` — DB/FTP 모두 DELETE 권한 없음 확인. 따라서 "삭제 보상" 불가 → **연산 순서(INSERT in-tx → FTP → commit) + DB 롤백**으로 처리. FTP 성공 후 commit 실패 시 잔존 파일은 삭제 불가(계정 제약)로 문서화
 - [x] `[—]` 모니터링 로그 (요청단위 로컬파일, MonitoringFilter+logback) `NFR-LOG-01/02`
 - [~] `[—]` 예외 계층 + 전역 처리 기반 구축 (ErrorCode/InspienException/GlobalExceptionHandler) `NFR-EXC` — 단계별(JDBC/FTP) 분기는 서비스 배선 시 완성
 - [ ] `[IT]` 강제 실패 시나리오 (FTP 차단 등) 검증 `AC-06`
