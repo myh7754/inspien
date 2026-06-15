@@ -33,9 +33,9 @@
 - [x] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a` — DELETE 권한 부재 확인, 보상은 트랜잭션 롤백으로 전환
 - [x] `[TDD]` 영수증 파일 생성 (`ReceiptFileBuilder`, ^구분·EUC-KR·파일명) `FR-S1-07/08`
 - [x] `[IT]` FTP 전송 (`ReceiptFtpSender`, commons-net) `FR-S1-06` — FTP 계정은 업로드 전용(RETR/DELE 550 거부) 확인, 보상은 삭제 불가 → 순서+롤백으로 전환
-- [ ] `[TDD]` 오케스트레이션 + 트랜잭션 경계(전략 B) (`OrderService`) `FR-S1-09, NFR-TX-01`
-- [ ] `[—]` REST 수신 + 응답 JSON (`OrderController`) `FR-S1-09-a`
-- [ ] `[IT]` happy path 통합 (XML POST → DB+FTP → SUCCESS)
+- [x] `[TDD]` 오케스트레이션 + 트랜잭션 경계(전략 B) (`OrderService`) `FR-S1-09, NFR-TX-01` — 단위테스트로 순서 계약(검증 단락 / FTP 실패 시 saveAll 선행) 고정. 실제 `@Transactional` 롤백 증명은 Phase 5 강제실패 IT(AC-06)에서. 빈 배선은 `BootstrapConfig`+`ApplicantContext`로 완료
+- [x] `[—]` REST 수신 + 응답 JSON (`OrderController`) `FR-S1-09-a` — `POST /orders`, 성공 `{result,orderIds,ftpFile}` / 실패 `{result,stage,reason}`(ErrorCode.stage). @WebMvcTest 3건
+- [x] `[IT]` happy path 통합 (XML POST → DB+FTP → SUCCESS) `OrderHappyPathIT` — 목킹 없이 실 API·Oracle·FTP 끝단 검증. ✅ **시나리오1 완료**
 
 ## Phase 4. 시나리오 2 — 운송 배치 (스케줄러) → Phase 3
 - [ ] `[IT]` STATUS='N' 조회 + SHIPMENT 적재 (`ShipmentRepository`) `FR-S2-02/03`
