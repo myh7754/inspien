@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = e.getErrorCode();
         log.error("처리 실패 [{}]: {}", errorCode.name(), e.getMessage(), e.getCause());
         return ResponseEntity.status(errorCode.getStatus())
-                .body(ErrorResponse.from(errorCode, e.getMessage()));
+                .body(ErrorResponse.fail(errorCode, e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -26,6 +26,6 @@ public class GlobalExceptionHandler {
         log.error("예상치 못한 오류 발생", e);
         ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
         return ResponseEntity.status(errorCode.getStatus())
-                .body(ErrorResponse.from(errorCode, errorCode.getDefaultMessage()));
+                .body(ErrorResponse.fail(errorCode, errorCode.getDefaultMessage()));
     }
 }
