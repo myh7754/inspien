@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * 실제 FTP 서버에 영수증 파일을 올리는 통합테스트.
  *
- * 주의: 제공 FTP 계정은 업로드 전용(STOR만 허용). RETR/DELE는 550으로 거부되므로
- * 내용 재다운로드나 사후 삭제로는 검증할 수 없다. 대신 디렉터리 목록(LIST는 허용)에
- * 업로드한 파일명이 나타나는지로 검증한다. 고정 파일명을 써서 재실행 시 덮어쓴다.
+ * 주의: 제공 FTP 계정은 업로드 전용(STOR만 허용). RETR/DELE는 550, 덮어쓰기는 553으로 거부되므로
+ * 내용 재다운로드·사후 삭제·동일명 재업로드가 모두 불가능하다. 대신 디렉터리 목록(LIST는 허용)에
+ * 업로드한 파일명이 나타나는지로 검증하고, 재실행 충돌(553)을 피하려 매 실행 유니크 파일명을 쓴다.
  *
  * 실행: ./gradlew integrationTest
  */
@@ -37,7 +37,7 @@ class ReceiptFtpSenderIT {
     @Test
     @DisplayName("영수증 파일을 FTP에 업로드하면 서버 디렉터리에 나타난다")
     void uploads_receipt_to_ftp() throws Exception {
-        String filename = "INSPIEN_문영훈_IT_AUTOTEST.txt";
+        String filename = "INSPIEN_문영훈_IT_" + System.currentTimeMillis() + ".txt";
         byte[] content = "A113^USER1^ITEM1^KEY999^홍길동^서울특별시 금천구^청바지^21000\n".getBytes(EUC_KR);
         ReceiptFile file = new ReceiptFile(filename, content);
 
