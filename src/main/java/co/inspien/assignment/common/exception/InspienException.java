@@ -14,6 +14,11 @@ public class InspienException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
+    public InspienException(ErrorCode errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
     public InspienException(ErrorCode errorCode, String message, Throwable cause) {
         super(message, cause);
         this.errorCode = errorCode;

@@ -1,5 +1,7 @@
 package co.inspien.assignment.scenario1;
 
+import co.inspien.assignment.common.exception.ErrorCode;
+import co.inspien.assignment.common.exception.InspienException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,6 +48,7 @@ public class OrderRepository {
                 // 복합 PK 충돌 시 다른 ID로 재시도 (NFR-ID-02)
             }
         }
-        throw new IllegalStateException("채번 재시도 " + MAX_RETRY + "회 초과");
+        throw new InspienException(ErrorCode.ORDER_PERSISTENCE_ERROR,
+                "채번 재시도 " + MAX_RETRY + "회 초과");
     }
 }
