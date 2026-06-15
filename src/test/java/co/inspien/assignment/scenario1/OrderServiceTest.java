@@ -1,5 +1,6 @@
 package co.inspien.assignment.scenario1;
 
+import co.inspien.assignment.bootstrap.ApplicantContext;
 import co.inspien.assignment.common.exception.ErrorCode;
 import co.inspien.assignment.common.exception.InspienException;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 class OrderServiceTest {
 
     private static final String APPLICANT_KEY = "KEY999";
+    private static final ApplicantContext APPLICANT = new ApplicantContext(APPLICANT_KEY, "문영훈");
 
     @Mock OrderXmlParser parser;
     @Mock OrderValidator validator;
@@ -35,7 +37,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new OrderService(parser, validator, repository, receiptFileBuilder, ftpSender, APPLICANT_KEY);
+        service = new OrderService(parser, validator, repository, receiptFileBuilder, ftpSender, APPLICANT);
     }
 
     @Test

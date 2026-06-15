@@ -1,5 +1,6 @@
 package co.inspien.assignment.scenario1;
 
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -17,6 +18,7 @@ import java.util.Map;
  * HEADER와 ITEM을 USER_ID로 join해 flat OrderRecord 목록으로 변환한다.
  * 입력 XML은 루트 태그 없이 HEADER/ITEM이 나란히 오므로 래핑 후 파싱.
  */
+@Component
 public class OrderXmlParser {
 
     public List<OrderRecord> parse(String xml) {

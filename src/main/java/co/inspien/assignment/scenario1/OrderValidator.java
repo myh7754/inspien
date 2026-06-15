@@ -2,9 +2,11 @@ package co.inspien.assignment.scenario1;
 
 import co.inspien.assignment.common.exception.ErrorCode;
 import co.inspien.assignment.common.exception.InspienException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class OrderValidator {
 
     public void validate(List<OrderRecord> records) {
