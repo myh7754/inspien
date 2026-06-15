@@ -1,5 +1,7 @@
 package co.inspien.assignment.scenario1;
 
+import co.inspien.assignment.common.exception.ErrorCode;
+import co.inspien.assignment.common.exception.InspienException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,69 +30,83 @@ class OrderValidatorTest {
     }
 
     @Test
-    @DisplayName("레코드가 하나도 없으면 ValidationException을 던진다")
+    @DisplayName("레코드가 하나도 없으면 VALIDATION_ERROR로 거부한다")
     void empty_list_throws_validation_exception() {
         assertThatThrownBy(() -> validator.validate(List.of()))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    @DisplayName("USER_ID가 공백이면 ValidationException을 던진다")
+    @DisplayName("USER_ID가 공백이면 VALIDATION_ERROR로 거부한다")
     void blank_userId_throws_validation_exception() {
         List<OrderRecord> records = List.of(
                 record("", "홍길동", "서울", "ITEM01", "청바지", 10000)
         );
         assertThatThrownBy(() -> validator.validate(records))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    @DisplayName("NAME이 공백이면 ValidationException을 던진다")
+    @DisplayName("NAME이 공백이면 VALIDATION_ERROR로 거부한다")
     void blank_name_throws_validation_exception() {
         List<OrderRecord> records = List.of(
                 record("USER01", "  ", "서울", "ITEM01", "청바지", 10000)
         );
         assertThatThrownBy(() -> validator.validate(records))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    @DisplayName("ADDRESS가 공백이면 ValidationException을 던진다")
+    @DisplayName("ADDRESS가 공백이면 VALIDATION_ERROR로 거부한다")
     void blank_address_throws_validation_exception() {
         List<OrderRecord> records = List.of(
                 record("USER01", "홍길동", "", "ITEM01", "청바지", 10000)
         );
         assertThatThrownBy(() -> validator.validate(records))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    @DisplayName("ITEM_ID가 공백이면 ValidationException을 던진다")
+    @DisplayName("ITEM_ID가 공백이면 VALIDATION_ERROR로 거부한다")
     void blank_itemId_throws_validation_exception() {
         List<OrderRecord> records = List.of(
                 record("USER01", "홍길동", "서울", "", "청바지", 10000)
         );
         assertThatThrownBy(() -> validator.validate(records))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    @DisplayName("ITEM_NAME이 공백이면 ValidationException을 던진다")
+    @DisplayName("ITEM_NAME이 공백이면 VALIDATION_ERROR로 거부한다")
     void blank_itemName_throws_validation_exception() {
         List<OrderRecord> records = List.of(
                 record("USER01", "홍길동", "서울", "ITEM01", "", 10000)
         );
         assertThatThrownBy(() -> validator.validate(records))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    @DisplayName("PRICE가 0 이하면 ValidationException을 던진다")
+    @DisplayName("PRICE가 0 이하면 VALIDATION_ERROR로 거부한다")
     void non_positive_price_throws_validation_exception() {
         List<OrderRecord> records = List.of(
                 record("USER01", "홍길동", "서울", "ITEM01", "청바지", 0)
         );
         assertThatThrownBy(() -> validator.validate(records))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(InspienException.class)
+                .extracting(e -> ((InspienException) e).getErrorCode())
+                .isEqualTo(ErrorCode.VALIDATION_ERROR);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
 
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "주문 데이터 검증에 실패했습니다."),
     XML_PARSE_ERROR(HttpStatus.BAD_REQUEST, "주문 XML 파싱에 실패했습니다."),
     ORDER_PERSISTENCE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "주문 저장에 실패했습니다."),
     FTP_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "영수증 파일 전송에 실패했습니다."),
