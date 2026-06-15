@@ -1,6 +1,6 @@
 package co.inspien.assignment.bootstrap;
 
-import co.inspien.assignment.scenario1.ReceiptFileBuilder;
+import co.inspien.assignment.order.service.ReceiptFileBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
