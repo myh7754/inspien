@@ -12,44 +12,44 @@
 - [x] 의존성(webmvc, jdbc, validation, lombok, jackson-xml, commons-net)
 - [x] `DataSourceAutoConfiguration` 임시 exclude (부팅 가능화)
 
-## Phase 1. 설계 (진행 중)
+## Phase 1. 설계 ✅ 완료
 - [x] PRD 작성 (`docs/PRD.md`)
-- [ ] design 확정 (`docs/design.md`) — 채번 알고리즘 TBD 결정 후 close
-- [ ] 아키텍처 before/after 다이어그램 초안
+- [x] design 확정 (`docs/design.md`) — 채번 알고리즘(인메모리 Atomic) 확정
+- [x] 아키텍처 before/after 다이어그램 초안
 
-## Phase 2. Bootstrap — 접속정보 확보 ⚠️ 모든 작업의 출발점
+## Phase 2. Bootstrap — 접속정보 확보 ✅ 완료
 - [x] `[TDD]` AES-128 복호화기 (`ConnectionInfoDecryptor`) — 키=전화번호 SHA-1 앞16B `FR-BOOT-02`
 - [x] `[TDD]` SAMPLE_DATA 디코더 (base64 → EUC-KR XML) `FR-BOOT-03`
 - [x] `[—]` 개인정보/참여자명 외부설정 분리 (`application-secret`) `C-01`
 - [x] `[IT]` 제공 API 호출 (`ProvisioningClient`, Basic Auth) `FR-BOOT-01`
 - [x] `[—]` 복호화 → DBMS 확정 → JDBC 드라이버 추가, exclude 제거 `C-02`
 - [x] `[—]` ORDER_TB / SHIPMENT_TB 생성(DDL 실행), 연결 확인
-- [ ] `[IT]` **부팅 시 FTP 접속정보 동적 로딩** (`@Bean`으로 fetch→복호화→`FtpProperties` 생성) `FR-BOOT-02` — B안(FTP 한정) 채택. 복호화기를 실전 경로에 배선해 FR-BOOT-02 충족. DB(DataSource)는 스프링 자동설정 영역이라 정적 유지. 배선은 시나리오1 `OrderService`(⑥) 이후 → Phase 3 의존
+- [x] `[IT]` **부팅 시 FTP 접속정보 동적 로딩** (`@Bean`으로 fetch→복호화→`FtpProperties` 생성) `FR-BOOT-02`
 
-## Phase 3. 시나리오 1 — 실시간 주문 (REST) → Phase 2
+## Phase 3. 시나리오 1 — 실시간 주문 (REST) ✅ 완료
 - [x] `[TDD]` XML 1:N → flat 파서 (`OrderXmlParser`) `FR-S1-02`
 - [x] `[TDD]` 입력 검증 (`OrderValidator`) `FR-S1-01-a`
 - [x] `[TDD]` 채번기 (`IdGenerator`, 대문자1+숫자3, 동시성) `NFR-ID-01/02`
-- [x] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a` — DELETE 권한 부재 확인, 보상은 트랜잭션 롤백으로 전환
+- [x] `[IT]` ORDER_TB 적재 (`OrderRepository`, STATUS='N' 고정) `FR-S1-03/03-a`
 - [x] `[TDD]` 영수증 파일 생성 (`ReceiptFileBuilder`, ^구분·EUC-KR·파일명) `FR-S1-07/08`
-- [x] `[IT]` FTP 전송 (`ReceiptFtpSender`, commons-net) `FR-S1-06` — FTP 계정은 업로드 전용(RETR/DELE 550 거부) 확인, 보상은 삭제 불가 → 순서+롤백으로 전환
-- [x] `[TDD]` 오케스트레이션 + 트랜잭션 경계(전략 B) (`OrderService`) `FR-S1-09, NFR-TX-01` — 단위테스트로 순서 계약(검증 단락 / FTP 실패 시 saveAll 선행) 고정. 실제 `@Transactional` 롤백 증명은 Phase 5 강제실패 IT(AC-06)에서. 빈 배선은 `BootstrapConfig`+`ApplicantContext`로 완료
-- [x] `[—]` REST 수신 + 응답 JSON (`OrderController`) `FR-S1-09-a` — `POST /orders`, 성공 `{result,orderIds,ftpFile}` / 실패 `{result,stage,reason}`(ErrorCode.stage). @WebMvcTest 3건
-- [x] `[IT]` happy path 통합 (XML POST → DB+FTP → SUCCESS) `OrderHappyPathIT` — 목킹 없이 실 API·Oracle·FTP 끝단 검증. ✅ **시나리오1 완료**
+- [x] `[IT]` FTP 전송 (`ReceiptFtpSender`, commons-net) `FR-S1-06`
+- [x] `[TDD]` 오케스트레이션 + 트랜잭션 경계(전략 B) (`OrderService`) `FR-S1-09, NFR-TX-01`
+- [x] `[—]` REST 수신 + 응답 JSON (`OrderController`) `FR-S1-09-a`
+- [x] `[IT]` happy path 통합 (XML POST → DB+FTP → SUCCESS) `OrderHappyPathIT`
 
-## Phase 4. 시나리오 2 — 운송 배치 (스케줄러) → Phase 3
-- [ ] `[IT]` STATUS='N' 조회 + SHIPMENT 적재 (`ShipmentRepository`) `FR-S2-02/03`
-- [ ] `[TDD]` 건별 처리 + STATUS='Y' 갱신 (`ShipmentBatchService`) `FR-S2-05/05-a`
-- [ ] `[—]` 5분 스케줄러 (`ShipmentScheduler`) `FR-S2-01`
-- [ ] `[IT]` 배치 멱등성 (재실행 중복적재 없음) `NFR-ID-03`
+## Phase 4. 시나리오 2 — 운송 배치 (스케줄러) ✅ 완료
+- [x] `[IT]` STATUS='N' 조회 + SHIPMENT 적재 (`ShipmentRepository`) `FR-S2-02/03`
+- [x] `[TDD]` 건별 처리 + STATUS='Y' 갱신 (`ShipmentBatchService`) `FR-S2-05/05-a`
+- [x] `[—]` 5분 스케줄러 (`ShipmentScheduler`) `FR-S2-01`
+- [x] `[IT]` 배치 멱등성 (재실행 중복적재 없음) `NFR-ID-03`
 
-## Phase 5. 견고성 — 보상 / 운영 (NFR) → Phase 3,4
-- [ ] `[TDD]` 보상 트랜잭션 `NFR-TX-01/02/03` — DB/FTP 모두 DELETE 권한 없음 확인. 따라서 "삭제 보상" 불가 → **연산 순서(INSERT in-tx → FTP → commit) + DB 롤백**으로 처리. FTP 성공 후 commit 실패 시 잔존 파일은 삭제 불가(계정 제약)로 문서화
+## Phase 5. 견고성 — 보상 / 운영 (NFR) ✅ 완료
+- [x] `[TDD]` 보상 트랜잭션 `NFR-TX-01/02/03` — 전략 B(JDBC commit 지연) 및 FTP 실패 시 롤백 확인
 - [x] `[—]` 모니터링 로그 (요청단위 로컬파일, MonitoringFilter+logback) `NFR-LOG-01/02`
-- [~] `[—]` 예외 계층 + 전역 처리 기반 구축 (ErrorCode/InspienException/GlobalExceptionHandler) `NFR-EXC` — 단계별(JDBC/FTP) 분기는 서비스 배선 시 완성
-- [ ] `[IT]` 강제 실패 시나리오 (FTP 차단 등) 검증 `AC-06`
+- [x] `[—]` 예외 계층 + 전역 처리 기반 구축 (ErrorCode/InspienException/GlobalExceptionHandler) `NFR-EXC`
+- [x] `[IT]` 강제 실패 시나리오 (FTP 차단 등) 검증 `AC-06`
 
-## Phase 6. 마무리 / 제출 → 전체
+## Phase 6. 마무리 / 제출 (진행 중)
 - [ ] `[—]` 아키텍처 before/after 이미지 확정 `S4`
 - [ ] `[—]` README (실행법, 설계 요약)
 - [ ] `[IT]` 데모 리허설 (참여자명+당일날짜 DB 조회 / FTP 파일 확인) `AC-07`
