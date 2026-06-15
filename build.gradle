@@ -46,12 +46,27 @@ tasks.named('test') {
 	useJUnitPlatform {
 		excludeTags 'integration'
 	}
+	// 단일 IT만 --tests로 지목하면 이 태스크는 0건 매칭됨 → 빌드 실패 방지
+	filter {
+		failOnNoMatchingTests = false
+	}
+	// 테스트 표준출력(println/log)을 콘솔에 노출 (민감정보는 찍지 말 것: FR-BOOT-03-a)
+	testLogging {
+		showStandardStreams = true
+	}
 }
 
 // IT 테스트: ./gradlew integrationTest 로 명시적 실행
 tasks.register('integrationTest', Test) {
 	useJUnitPlatform {
 		includeTags 'integration'
+	}
+	// 단일 단위테스트만 --tests로 지목하면 이 태스크는 0건 매칭됨 → 빌드 실패 방지
+	filter {
+		failOnNoMatchingTests = false
+	}
+	testLogging {
+		showStandardStreams = true
 	}
 	testClassesDirs = sourceSets.test.output.classesDirs
 	classpath = sourceSets.test.runtimeClasspath

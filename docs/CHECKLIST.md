@@ -24,6 +24,7 @@
 - [x] `[IT]` 제공 API 호출 (`ProvisioningClient`, Basic Auth) `FR-BOOT-01`
 - [x] `[—]` 복호화 → DBMS 확정 → JDBC 드라이버 추가, exclude 제거 `C-02`
 - [x] `[—]` ORDER_TB / SHIPMENT_TB 생성(DDL 실행), 연결 확인
+- [ ] `[IT]` **부팅 시 접속정보 동적 로딩** (`ApplicationRunner` 등에서 fetch→복호화→`DataSource`/`FtpProperties` 구성) `FR-BOOT-02` — B안 채택. 복호화기를 실전 경로에 배선(현재는 secret.yml 정적값). 배선은 시나리오1 `OrderService`(⑥) 이후 → Phase 3 의존
 
 ## Phase 3. 시나리오 1 — 실시간 주문 (REST) → Phase 2
 - [x] `[TDD]` XML 1:N → flat 파서 (`OrderXmlParser`) `FR-S1-02`

@@ -24,7 +24,7 @@ public class OrderRepository {
      * 주문 레코드를 ORDER_TB에 적재한다. STATUS는 'N'으로 고정(FR-S1-03-a).
      * @return 생성된 ORDER_ID 목록
      */
-    public List<String> save(List<OrderRecord> records, String applicantKey) {
+    public List<String> saveAll(List<OrderRecord> records, String applicantKey) {
         List<String> orderIds = new ArrayList<>();
         for (OrderRecord r : records) {
             orderIds.add(insertWithRetry(r, applicantKey));
