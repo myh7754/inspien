@@ -1,5 +1,6 @@
 package co.inspien.assignment.order.parser;
 import co.inspien.assignment.order.dto.OrderRecord;
+import co.inspien.assignment.common.exception.InspienException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("주문 XML 파서")
 class OrderXmlParserTest {
@@ -97,5 +99,34 @@ class OrderXmlParserTest {
         assertThat(records.get(1).name()).isEqualTo("김철수");
         assertThat(records.get(2).name()).isEqualTo("김철수");
         assertThat(records.get(2).itemId()).isEqualTo("ITEM03");
+    }
+
+    @Test
+    @DisplayName("대응하는 HEADER가 없는 ITEM이 있으면 검증 예외로 거부한다 (조용히 버리지 않음)")
+    void rejects_item_without_matching_header() {
+        String xml = """
+                <HEADER>
+                    <USER_ID>USER01</USER_ID>
+                    <NAME>홍길동</NAME>
+                    <ADDRESS>서울 강남</ADDRESS>
+                    <STATUS>N</STATUS>
+                </HEADER>
+                <ITEM>
+                    <USER_ID>USER01</USER_ID>
+                    <ITEM_ID>ITEM01</ITEM_ID>
+                    <ITEM_NAME>상품A</ITEM_NAME>
+                    <PRICE>10000</PRICE>
+                </ITEM>
+                <ITEM>
+                    <USER_ID>GHOST</USER_ID>
+                    <ITEM_ID>ITEM99</ITEM_ID>
+                    <ITEM_NAME>유령상품</ITEM_NAME>
+                    <PRICE>1000</PRICE>
+                </ITEM>
+                """;
+
+        assertThatThrownBy(() -> parser.parse(xml))
+                .isInstanceOf(InspienException.class)
+                .hasMessageContaining("GHOST");
     }
 }

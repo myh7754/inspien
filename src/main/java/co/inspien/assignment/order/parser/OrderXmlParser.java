@@ -1,5 +1,7 @@
 package co.inspien.assignment.order.parser;
 import co.inspien.assignment.order.dto.OrderRecord;
+import co.inspien.assignment.common.exception.ErrorCode;
+import co.inspien.assignment.common.exception.InspienException;
 
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -27,6 +29,8 @@ public class OrderXmlParser {
             Document doc = parseXml("<root>" + xml + "</root>");
             Map<String, HeaderInfo> headers = collectHeaders(doc);
             return buildRecords(doc, headers);
+        } catch (InspienException e) {
+            throw e; // 검증 성격(예: HEADER 없는 ITEM) 예외는 그대로 전파
         } catch (Exception e) {
             throw new IllegalArgumentException("주문 XML 파싱 실패", e);
         }
@@ -57,7 +61,10 @@ public class OrderXmlParser {
             Element item = (Element) items.item(i);
             String userId = text(item, "USER_ID");
             HeaderInfo header = headers.get(userId);
-            if (header == null) continue; // ITEM에 대응하는 HEADER 없으면 스킵
+            if (header == null) { // 대응하는 HEADER 없는 ITEM = 불완전 입력 → 조용히 버리지 않고 거부
+                throw new InspienException(ErrorCode.VALIDATION_ERROR,
+                        "대응하는 HEADER가 없는 ITEM이 있습니다: USER_ID=" + userId);
+            }
 
             records.add(new OrderRecord(
                     userId,

@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 운송 배치 오케스트레이션(FR-S2). STATUS='N' 미전송 주문을 조회해 건별로 SHIPMENT_TB에 적재하고,
- * 성공한 건만 STATUS='Y'로 전이한다. 한 건 실패가 전체를 막지 않으며(건별 처리),
+ * 운송 배치 오케스트레이션(FR-S2). STATUS='N' 미전송 주문을 조회해 건별로 처리한다.
+ * 건별 적재+상태전이는 {@link ShipmentItemProcessor}가 하나의 트랜잭션으로 수행하므로,
+ * 한 건 안에서 일부만 반영되는 일이 없다. 한 건 실패가 전체를 막지 않으며(건별 격리),
  * 실패 건은 STATUS='N'을 유지해 다음 배치에서 재시도된다(FR-S2-03-a).
  */
 @Service
@@ -20,6 +21,7 @@ public class ShipmentBatchService {
     private static final Logger log = LoggerFactory.getLogger(ShipmentBatchService.class);
 
     private final ShipmentRepository repository;
+    private final ShipmentItemProcessor processor;
     private final ApplicantContext applicant;
 
     public BatchResult run() {
@@ -31,8 +33,7 @@ public class ShipmentBatchService {
         int failed = 0;
         for (ShipmentRecord target : targets) {
             try {
-                String shipmentId = repository.insertShipment(target, applicantKey);
-                repository.markSent(target.orderId(), applicantKey);
+                String shipmentId = processor.processOne(target, applicantKey);
                 success++;
                 log.info("운송 적재 성공 — ORDER_ID={} → SHIPMENT_ID={}", target.orderId(), shipmentId);
             } catch (Exception e) {
